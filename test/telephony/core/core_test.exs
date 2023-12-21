@@ -15,7 +15,7 @@ defmodule Telephony.CoreTest do
     payload = %{
       full_name: "Kevin",
       phone_number: "123",
-        subscriber_type: :prepaid
+      subscriber_type: :prepaid
     }
 
     %{subscribers: subscribers, payload: payload}
