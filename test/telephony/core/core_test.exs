@@ -62,7 +62,8 @@ defmodule Telephony.CoreTest do
   end
 
   test "display error, when subscriber already exists", %{
-    subscribers: subscribers, payload: payload
+    subscribers: subscribers,
+    payload: payload
   } do
     result = Core.create_subscriber(subscribers, payload)
     assert {:error, "Subscriber `123` already exists"} == result

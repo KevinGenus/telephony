@@ -12,7 +12,6 @@ defmodule Telephony.Core.Prepaid do
     subscriber = %{subscriber | subscriber_type: subscriber_type}
     call = Call.new(time_spent, date)
     %{subscriber | calls: subscriber.calls ++ [call]}
-
   end
 
   defstruct credits: 0, recharges: []

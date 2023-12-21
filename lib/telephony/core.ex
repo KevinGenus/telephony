@@ -3,8 +3,8 @@ defmodule Telephony.Core do
   Documentation for `Telephony.Core`.
   """
 
-   alias __MODULE__.Subscriber
-   @subscriber_type ~w/prepaid postpaid/a
+  alias __MODULE__.Subscriber
+  @subscriber_type ~w/prepaid postpaid/a
 
   def create_subscriber(subscribers, %{subscriber_type: subscriber_type} = payload)
       when subscriber_type in @subscriber_type do
