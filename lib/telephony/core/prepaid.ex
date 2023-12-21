@@ -6,7 +6,6 @@ defmodule Telephony.Core.Prepaid do
   alias Telephony.Core.Call
   @price_per_minute 1.45
 
-
   def make_call(%{subscriber_type: subscriber_type} = subscriber, time_spent, date) do
     credit_spent = @price_per_minute * time_spent
     subscriber_type = %{subscriber_type | credits: subscriber_type.credits - credit_spent}
