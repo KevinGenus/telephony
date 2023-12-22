@@ -8,7 +8,7 @@ defmodule Telephony.Core.PrepaidTest do
       phone_number: "123",
       subscriber_type: %Prepaid{credits: 10, recharges: []}
     }
-     
+
     %{subscriber: subscriber}
   end
 
