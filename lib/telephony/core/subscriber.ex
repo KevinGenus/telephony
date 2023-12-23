@@ -3,7 +3,7 @@ defmodule Telephony.Core.Subscriber do
   Documentation for `Telephony.Core.Subscriber`.
   """
 
-  alias Telephony.Core.{Pospaid, Prepaid, Recharge}
+  alias Telephony.Core.{Pospaid, Prepaid}
   defstruct full_name: nil, phone_number: nil, subscriber_type: :prepaid, calls: []
 
   def new(%{subscriber_type: :prepaid} = payload) do

@@ -1,6 +1,6 @@
 defmodule Telephony.Core.PrepaidTest do
   use ExUnit.Case
-  alias Telephony.Core.{Call, Prepaid, Recharge, Subscriber}
+  alias Telephony.Core.{Call, Invoice, Prepaid, Recharge, Subscriber}
 
   setup do
     subscriber = %Subscriber{
@@ -63,5 +63,44 @@ defmodule Telephony.Core.PrepaidTest do
     }
 
     assert expect == result
+  end
+
+  test "print invoice", %{subscriber: subscriber} do
+    # date = NaiveDateTime.utc_now()
+    dec_date = ~D[2023-12-23]
+    nov_date = ~D[2023-11-23]
+    # oct_date = ~D[2023-10-23]
+
+    subscriber = %Subscriber{
+      full_name: "Kevin",
+      phone_number: "123",
+      subscriber_type: %Prepaid{
+        credits: 253.6,
+        recharges: [
+          %Recharge{value: 100, date: dec_date},
+          %Recharge{value: 100, date: nov_date},
+          %Recharge{value: 100, date: nov_date}
+        ]
+      },
+      calls: [
+        %Call{time_spent: 2, date: dec_date},
+        %Call{time_spent: 10, date: nov_date},
+        %Call{time_spent: 20, date: nov_date}
+      ]
+    }
+
+    subscriber_type = subscriber.subscriber_type
+    calls = subscriber.calls
+
+    assert Invoice.print(subscriber_type, calls, 2023, 11) == %{
+             calls: [
+               %{time_spent: 10, value_spent: 14.5, date: nov_date},
+               %{time_spent: 20, value_spent: 29.0, date: nov_date}
+             ],
+             recharges: [
+               %Recharge{value: 100, date: nov_date},
+               %Recharge{value: 100, date: nov_date}
+             ]
+           }
   end
 end
