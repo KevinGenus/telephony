@@ -65,11 +65,9 @@ defmodule Telephony.Core.PrepaidTest do
     assert expect == result
   end
 
-  test "print invoice", %{subscriber: subscriber} do
-    # date = NaiveDateTime.utc_now()
+  test "print invoice" do
     dec_date = ~D[2023-12-23]
     nov_date = ~D[2023-11-23]
-    # oct_date = ~D[2023-10-23]
 
     subscriber = %Subscriber{
       full_name: "Kevin",
