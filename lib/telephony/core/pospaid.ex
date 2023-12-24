@@ -4,7 +4,7 @@ defmodule Telephony.Core.Pospaid do
   """
 
   defstruct spent: 0
-  alias Telephony.Core.Call
+  alias Telephony.Core.{Call, Invoice}
   @price_per_minute 1.04
 
   def make_call(subscriber, time_spent, date) do
