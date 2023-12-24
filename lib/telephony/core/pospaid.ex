@@ -28,8 +28,6 @@ defmodule Telephony.Core.Pospaid do
     @price_per_minute 1.04
 
     def print(_pospaid, calls, year, month) do
-      value_spent = Enum.reduce(calls, 0, &(&1.value_spent + &2))
-
       calls =
         Enum.reduce(calls, [], fn call, acc ->
           if call.date.year == year and call.date.month == month do
@@ -40,6 +38,8 @@ defmodule Telephony.Core.Pospaid do
             acc
           end
         end)
+
+      value_spent = Enum.reduce(calls, 0, &(&1.value_spent + &2))
 
       %{calls: calls, value_spent: value_spent}
     end
