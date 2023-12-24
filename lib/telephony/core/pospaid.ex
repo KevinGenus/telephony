@@ -23,4 +23,25 @@ defmodule Telephony.Core.Pospaid do
     call = Call.new(time_spent, date)
     %{subscriber | calls: subscriber.calls ++ [call]}
   end
+
+  defimpl Invoice, for: Telephony.Core.Pospaid do
+    @price_per_minute 1.04
+
+    def print(_pospaid, calls, year, month) do
+      calls =
+        Enum.reduce(calls, [], fn call, acc ->
+          if call.date.year == year and call.date.month == month do
+            value_spent = call.time_spent * @price_per_minute
+            call = %{date: call.date, value_spent: value_spent, time_spent: call.time_spent}
+            acc ++ [call]
+          else
+            acc
+          end
+        end)
+
+      value_spent = Enum.reduce(calls, 0, &(&1.value_spent + &2))
+
+      %{calls: calls, value_spent: value_spent}
+    end
+  end
 end
