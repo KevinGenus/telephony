@@ -55,7 +55,7 @@ defmodule SubscriberTest do
   end
 
   test "make a prepaid call" do
-    date = ~D[2023-12-26]
+    date = Date.utc_today()
 
     subscriber = %Subscriber{
       full_name: "Kevin",
@@ -73,7 +73,7 @@ defmodule SubscriberTest do
   end
 
   test "make a prepaid call without enough credits" do
-    date = ~D[2023-12-26]
+    date = Date.utc_today()
 
     subscriber = %Subscriber{
       full_name: "Kevin",
@@ -86,7 +86,7 @@ defmodule SubscriberTest do
   end
 
   test "make a pospaid call" do
-    date = ~D[2023-12-26]
+    date = Date.utc_today()
 
     subscriber = %Subscriber{
       full_name: "Kevin",
@@ -104,7 +104,7 @@ defmodule SubscriberTest do
   end
 
   test "make a recharge (prepaid call)" do
-    date = ~D[2023-12-26]
+    date = Date.utc_today()
 
     subscriber = %Subscriber{
       full_name: "Kevin",
@@ -125,7 +125,7 @@ defmodule SubscriberTest do
   end
 
   test "make a recharge (pospaid call)" do
-    date = ~D[2023-12-26]
+    date = Date.utc_today()
 
     subscriber = %Subscriber{
       full_name: "Kevin",
@@ -138,36 +138,38 @@ defmodule SubscriberTest do
   end
 
   test "print invoice (pospaid call)" do
-    date_nov = ~D[2023-11-26]
-    date_dec = ~D[2023-12-26]
+    current_month = Date.beginning_of_month(Date.utc_today())
+    previous_month = Date.beginning_of_month(Date.add(current_month, -1))
+    year = previous_month.year
+    month = previous_month.month
 
     subscriber = %Subscriber{
       calls: [
-        %Call{time_spent: 20, date: date_nov},
-        %Call{time_spent: 30, date: date_nov},
-        %Call{time_spent: 10, date: date_dec}
+        %Call{time_spent: 20, date: previous_month},
+        %Call{time_spent: 30, date: previous_month},
+        %Call{time_spent: 10, date: current_month}
       ],
       full_name: "Kevin",
       phone_number: "123",
       type: %Pospaid{spent: 10.40}
     }
 
-    assert Subscriber.print_invoice(subscriber, 2023, 11) ==
+    assert Subscriber.print_invoice(subscriber, year, month) ==
              %{
                subscriber: %Telephony.Core.Subscriber{
                  full_name: "Kevin",
                  phone_number: "123",
                  type: %Telephony.Core.Pospaid{spent: 10.40},
                  calls: [
-                   %Telephony.Core.Call{time_spent: 20, date: ~D[2023-11-26]},
-                   %Telephony.Core.Call{time_spent: 30, date: ~D[2023-11-26]},
-                   %Telephony.Core.Call{time_spent: 10, date: ~D[2023-12-26]}
+                   %Telephony.Core.Call{time_spent: 20, date: previous_month},
+                   %Telephony.Core.Call{time_spent: 30, date: previous_month},
+                   %Telephony.Core.Call{time_spent: 10, date: current_month}
                  ]
                },
                invoice: %{
                  calls: [
-                   %{date: ~D[2023-11-26], time_spent: 20, value_spent: 20.8},
-                   %{date: ~D[2023-11-26], time_spent: 30, value_spent: 31.200000000000003}
+                   %{date: previous_month, time_spent: 20, value_spent: 20.8},
+                   %{date: previous_month, time_spent: 30, value_spent: 31.200000000000003}
                  ],
                  value_spent: 52.0
                }
@@ -175,37 +177,39 @@ defmodule SubscriberTest do
   end
 
   test "print invoice (prepaid call)" do
-    date_nov = ~D[2023-11-26]
-    date_dec = ~D[2023-12-26]
+    current_month = Date.beginning_of_month(Date.utc_today())
+    previous_month = Date.beginning_of_month(Date.add(current_month, -1))
+    year = previous_month.year
+    month = previous_month.month
 
     subscriber = %Subscriber{
       calls: [
-        %Call{time_spent: 20, date: date_nov},
-        %Call{time_spent: 30, date: date_nov},
-        %Call{time_spent: 10, date: date_dec}
+        %Call{time_spent: 20, date: previous_month},
+        %Call{time_spent: 30, date: previous_month},
+        %Call{time_spent: 10, date: current_month}
       ],
       full_name: "Kevin",
       phone_number: "123",
       type: %Prepaid{credits: 10, recharges: []}
     }
 
-    assert Subscriber.print_invoice(subscriber, 2023, 11) ==
+    assert Subscriber.print_invoice(subscriber, year, month) ==
              %{
                subscriber: %Telephony.Core.Subscriber{
                  full_name: "Kevin",
                  phone_number: "123",
                  type: %Telephony.Core.Prepaid{credits: 10, recharges: []},
                  calls: [
-                   %Telephony.Core.Call{time_spent: 20, date: ~D[2023-11-26]},
-                   %Telephony.Core.Call{time_spent: 30, date: ~D[2023-11-26]},
-                   %Telephony.Core.Call{time_spent: 10, date: ~D[2023-12-26]}
+                   %Telephony.Core.Call{time_spent: 20, date: previous_month},
+                   %Telephony.Core.Call{time_spent: 30, date: previous_month},
+                   %Telephony.Core.Call{time_spent: 10, date: current_month}
                  ]
                },
                invoice: %{
                  recharges: [],
                  calls: [
-                   %{date: ~D[2023-11-26], time_spent: 20, value_spent: 29.0},
-                   %{date: ~D[2023-11-26], time_spent: 30, value_spent: 43.5}
+                   %{date: previous_month, time_spent: 20, value_spent: 29.0},
+                   %{date: previous_month, time_spent: 30, value_spent: 43.5}
                  ]
                }
              }
