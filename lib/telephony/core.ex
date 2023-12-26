@@ -27,41 +27,38 @@ defmodule Telephony.Core do
   end
 
   def make_recharge(subscribers, phone_number, value, date) do
-    subscribers
-    |> search_subscriber(phone_number)
-    |> then(fn subscriber ->
-      if is_nil(subscriber) do
-        subscribers
-      else
-        subscribers = List.delete(subscribers, subscriber)
-        result = Subscriber.make_recharge(subscriber, value, date)
-        update_subscriber(subscribers, result)
-      end
-    end)
+    perform = fn subscriber ->
+      subscribers = List.delete(subscribers, subscriber)
+      result = Subscriber.make_recharge(subscriber, value, date)
+      update_subscriber(subscribers, result)
+    end
+
+    execute_operation(subscribers, phone_number, perform)
   end
 
   def make_call(subscribers, phone_number, time_spent, date) do
-    subscribers
-    |> search_subscriber(phone_number)
-    |> then(fn subscriber ->
-      if is_nil(subscriber) do
-        subscribers
-      else
-        subscribers = List.delete(subscribers, subscriber)
-        result = Subscriber.make_call(subscriber, time_spent, date)
-        update_subscriber(subscribers, result)
-      end
-    end)
+    perform = fn subscriber ->
+      subscribers = List.delete(subscribers, subscriber)
+      result = Subscriber.make_call(subscriber, time_spent, date)
+      update_subscriber(subscribers, result)
+    end
+
+    execute_operation(subscribers, phone_number, perform)
   end
 
   def print_invoice(subscribers, phone_number, year, month) do
+    perform = &Subscriber.print_invoice(&1, year, month)
+    execute_operation(subscribers, phone_number, perform)
+  end
+
+  def execute_operation(subscribers, phone_number, func) do
     subscribers
     |> search_subscriber(phone_number)
     |> then(fn subscriber ->
       if is_nil(subscriber) do
         subscribers
       else
-        Subscriber.print_invoice(subscriber, year, month)
+        func.(subscriber)
       end
     end)
   end
