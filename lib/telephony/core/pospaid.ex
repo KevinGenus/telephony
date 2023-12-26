@@ -10,7 +10,7 @@ defmodule Telephony.Core.Pospaid do
     @price_per_minute 1.04
 
     def make_recharge(_, _, _) do
-      {:error, "Pospaid ca not make a recharge"}
+      {:error, "Pospaid can not make a recharge"}
     end
 
     def print_invoice(_pospaid, calls, year, month) do
