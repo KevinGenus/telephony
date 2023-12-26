@@ -24,7 +24,8 @@ defmodule Telephony.Core.PospaidTest do
     dec_date = ~D[2023-12-23]
     nov_date = ~D[2023-11-23]
 
-    pospaid = %Pospaid{spent: 90 * price_per_minute }
+    pospaid = %Pospaid{spent: 90 * price_per_minute}
+
     calls = [
       %Call{time_spent: 10, date: dec_date},
       %Call{time_spent: 50, date: nov_date},
