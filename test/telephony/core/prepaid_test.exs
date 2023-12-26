@@ -50,7 +50,7 @@ defmodule Telephony.Core.PrepaidTest do
     subscriber = %Telephony.Core.Subscriber{
       full_name: "Kevin",
       phone_number: "123",
-      subscriber_type: %Prepaid{
+      type: %Prepaid{
         credits: 253.6,
         recharges: [
           %Recharge{value: 100, date: dec_date},
@@ -65,10 +65,10 @@ defmodule Telephony.Core.PrepaidTest do
       ]
     }
 
-    subscriber_type = subscriber.subscriber_type
+    type = subscriber.type
     calls = subscriber.calls
 
-    assert Subscriber.print_invoice(subscriber_type, calls, 2023, 11) == %{
+    assert Subscriber.print_invoice(type, calls, 2023, 11) == %{
              calls: [
                %{time_spent: 10, value_spent: 14.5, date: nov_date},
                %{time_spent: 20, value_spent: 29.0, date: nov_date}
