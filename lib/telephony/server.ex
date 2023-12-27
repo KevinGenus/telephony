@@ -1,4 +1,6 @@
-defmodule Telephony.Server do
+defmodule Telephony.Server doo  @moduledoc """
+  Documentation for `Telephony.Server`.
+  """
   @behaviour GenServer
   alias Telephony.Core
 
