@@ -23,8 +23,6 @@ defmodule Telephony.Core.Subscriber do
     struct(__MODULE__, payload)
   end
 
-  @spec make_call(atom() | %{:type => any(), optional(any()) => any()}, any(), any()) ::
-          {:error, any()} | %{:calls => [...], :type => any(), optional(any()) => any()}
   def make_call(subscriber, time_spent, date) do
     case Subscriber.make_call(subscriber.type, time_spent, date) do
       {:error, message} ->
