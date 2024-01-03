@@ -4,7 +4,7 @@ defmodule Telephony.Core do
   """
 
   alias __MODULE__.Subscriber
-  @types ~w/prepaid postpaid/a
+  @types ~w/prepaid pospaid/a
 
   def create_subscriber(subscribers, %{type: type} = payload)
       when type in @types do

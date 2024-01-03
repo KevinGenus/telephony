@@ -41,7 +41,7 @@ defmodule Telephony.ServerTest do
     assert result.phone_number == payload.phone_number
   end
 
-  test "make a recharger", %{pid: pid, process_name: process_name, payload: payload} do
+  test "make a recharge", %{pid: pid, process_name: process_name, payload: payload} do
     GenServer.call(process_name, {:create_subscriber, payload})
 
     date = Date.utc_today()
