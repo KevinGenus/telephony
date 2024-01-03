@@ -2,7 +2,7 @@ defmodule Telephony.Server do
   @moduledoc """
   Documentation for `Telephony.Server`.
   """
-  @behaviour GenServer
+  use GenServer
   alias Telephony.Core
 
   @spec start_link(atom() | {:global, any()} | {:via, atom(), any()}) ::
@@ -28,16 +28,6 @@ defmodule Telephony.Server do
     {:reply, subscriber, subscribers}
   end
 
-  def handle_cast({:make_recharge, phone_number, value, date}, subscribers) do
-    case Core.make_recharge(subscribers, phone_number, value, date) do
-      {:error, _} ->
-        {:noreply, subscribers}
-
-      {subscribers, _} ->
-        {:noreply, subscribers}
-    end
-  end
-
   def handle_call({:make_call, phone_number, time_spent, date}, _from, subscribers) do
     case Core.make_call(subscribers, phone_number, time_spent, date) do
       {:error, _} = err ->
@@ -56,5 +46,15 @@ defmodule Telephony.Server do
   def handle_call({:print_invoices, year, month}, _from, subscribers) do
     invoices = Core.print_invoices(subscribers, year, month)
     {:reply, invoices, subscribers}
+  end
+
+  def handle_cast({:make_recharge, phone_number, value, date}, subscribers) do
+    case Core.make_recharge(subscribers, phone_number, value, date) do
+      {:error, _} ->
+        {:noreply, subscribers}
+
+      {subscribers, _} ->
+        {:noreply, subscribers}
+    end
   end
 end
